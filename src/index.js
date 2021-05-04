@@ -29,10 +29,25 @@ app.post('/account', (request, response) => {
     cpf,
     name,
     id: uuidv4(),
-    statement: []
+    statement: [],
   })
 
   return response.status(201).send();
 });
+
+app.get('/statement', (request, response) => {
+  // const { cpf } = request.params;
+  const { cpf } = request.headers;
+
+  const customer = customers.find(customer => customer.cpf === cpf);
+
+  if(!customer) {
+    return response.status(404).json({
+      error: "Customer not found"
+    })
+  }
+
+  return response.json(customer.statement);
+})
 
 app.listen(3333);
